@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>致佳妮的诗</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: '楷体', serif;
+            color: #fff;
+            overflow: hidden;
+            background: #000;
+            position: relative;
+        }
+
+        #poem-container {
+            text-align: center;
+            font-size: 24px;
+            line-height: 1.6;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 80%;
+            position: relative;
+        }
+
+        #background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+
+        /* Particles.js 容器 */
+        #particles-js {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+    </style>
+    <!-- Particles.js 库 -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- Anime.js 库 -->
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+</head>
+<body>
+    <div id="background"></div>
+    <div id="particles-js"></div>
+    <div id="poem-container"></div>
+
+    <script>
+        const poem = [
+            "方才星辰未及迎，",
+            "你入我世界，我却未觉。",
+            "孤影徘徊，是我之过，",
+            "心如晚风，乱了方寸。",
+            "愿以此刻为始，",
+            "重绘你的笑颜；",
+            "以心跳为誓，",
+            "轻诉我的歉意。",
+            "若你愿再启程，",
+            "我必紧握你手，",
+            "共赴每一片未知，",
+            "因你，方为我的完整。",
+            "对不起，我的疏忽，",
+            "却是我心底最深的遗憾。",
+            "愿你原谅，",
+            "让我以此刻，补你一笑。"
+        ];
+
+        const images = [
+            "url('image1.jpg')",
+            "url('image2.jpg')",
+            "url('image3.jpg')",
+            "url('image4.jpg')"
+        ];
+
+        const decorTypes = ['hearts', 'fireworks', 'snowflakes', 'flowers'];
+        let currentIndex = 0;
+        const poemContainer = document.getElementById('poem-container');
+        const background = document.getElementById('background');
+
+        // 初始化 Particles.js
+        function initParticles(type) {
+            particlesJS('particles-js', getParticlesConfig(type));
+        }
+
+        // 根据类型获取 Particles.js 配置
+        function getParticlesConfig(type) {
+            const config = {
+                particles: {
+                    number: { value: 50 },
+                    color: { value: '#ff6b6b' },
+                    shape: { type: 'image' },
+                    opacity: { value: 1, random: true },
+                    size: { value: 20, random: true },
+                    line_linked: { enable: false },
+                    move: { enable: true, speed: 2, direction: 'bottom', straight: true }
+                },
+                interactivity: { detect_on: 'canvas', events: { onhover: { enable: false } } },
+                retina_detect: true
+            };
+
+            if (type === 'hearts') {
+                config.particles.shape.type = 'image';
+                config.particles.shape.image = { src: 'https://www.pngmart.com/files/8/Heart-PNG-Image.png', width: 20, height: 20 };
+            } else if (type === 'snowflakes') {
+                config.particles.shape.type = 'image';
+                config.particles.shape.image = { src: 'https://www.pngmart.com/files/12/Snowflake-PNG-Transparent-Image.png', width: 20, height: 20 };
+            } else if (type === 'flowers') {
+                config.particles.shape.type = 'image';
+                config.particles.shape.image = { src: 'https://www.pngmart.com/files/12/Flower-Transparent-Background.png', width: 20, height: 20 };
+            } else if (type === 'fireworks') {
+                config.particles.number.value = 100;
+                config.particles.color.value = ['#ff9f43', '#ff6b6b', '#ff4757'];
+                config.particles.shape.type = 'circle';
+                config.particles.move.direction = 'none';
+                config.particles.move.straight = false;
+                config.particles.move.speed = 5;
+                config.particles.move.random = true;
+            }
+
+            return config;
+        }
+
+        // 清除 Particles.js 效果
+        function clearParticles() {
+            const particles = document.getElementById('particles-js');
+            particles.innerHTML = '';
+        }
+
+        function showNextLines() {
+            if (currentIndex < poem.length) {
+                // 每次显示四句
+                const lines = poem.slice(currentIndex, currentIndex + 4).join("<br>");
+                poemContainer.innerHTML = lines;
+
+                // 随机选择装饰效果
+                const randomDecorType = decorTypes[Math.floor(Math.random() * decorTypes.length)];
+                clearParticles(); // 清除旧装饰
+                initParticles(randomDecorType); // 初始化新装饰
+
+                // 切换背景图片
+                background.style.backgroundImage = images[Math.floor(currentIndex / 4) % images.length];
+                background.style.opacity = 1;
+
+                currentIndex += 4;
+                setTimeout(showNextLines, 5000); // 每5秒显示下一组四句
+            } else {
+                poemContainer.innerHTML = "爱你的 [你的名字]";
+                background.style.opacity = 1;
+            }
+        }
+
+        showNextLines();
+    </script>
+</body>
+</html>
